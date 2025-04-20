@@ -2,10 +2,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InvoiceServiceManager {
-    private List<InvoiceData> invoices = new ArrayList<>();
+    private final List<InvoiceData> invoices = new ArrayList<>();
+    private final Set<String> invoiceIds = new HashSet<>();
 
-    public void addInvoice(InvoiceData invoice) {
+    public boolean addInvoice(InvoiceData invoice) {
+        // prevent duplicate entries
+        if (invoiceIds.contains(invoice.getInvoiceId())) {
+            return false;
+        }
         invoices.add(invoice);
+        invoiceIds.add(invoice.getInvoiceId());
+        return true;
     }
 
     public List<InvoiceData> listInvoices() {
@@ -35,5 +42,9 @@ public class InvoiceServiceManager {
                 .sorted(Comparator.comparingDouble(InvoiceData::getAmount).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
+    }
+
+    public List<InvoiceData> getAllInvoices() {
+        return invoices;
     }
 }

@@ -8,7 +8,7 @@ public class InvoiceApp {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            prompt();
+            cliPrompt();
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -22,15 +22,25 @@ public class InvoiceApp {
                     scanner.nextLine();
                     System.out.print("Date (yyyy-mm-dd): ");
                     LocalDate date = LocalDate.parse(scanner.nextLine());
-                    service.addInvoice(new InvoiceData(id, supplier, amount, date));
+                    if (service.addInvoice(new InvoiceData(id, supplier, amount, date))) {
+                        System.out.println("Invoice added.");
+                    } else {
+                        System.out.println("Invoice ID already exists. Skipped.");
+                    }
                 }
                 case 2 -> {
+                    int skipped = 0, added = 0;
                     System.out.print("CSV file path: ");
                     String path = scanner.nextLine();
                     List<InvoiceData> imported = InvoiceCSVReader.readFromCsv(path);
-                    imported.forEach(service::addInvoice);
-                    System.out.println(imported.size() + " invoices imported.");
-                }
+                    for (InvoiceData invoice : imported) {
+                        if (service.addInvoice(invoice)) {
+                            added++;
+                        } else {
+                            skipped++;
+                        }
+                    }
+                    System.out.println("Import complete. Added: " + added + ", Skipped (duplicates): " + skipped);                }
                 case 3 -> service.listInvoices().forEach(System.out::println);
                 case 4 -> {
                     System.out.print("Supplier: ");
@@ -44,7 +54,8 @@ public class InvoiceApp {
                 }
                 case 6 -> service.totalAmountPerSupplier().forEach((k, v) -> System.out.println(k + ": " + v));
                 case 7 -> service.top3Invoices().forEach(System.out::println);
-                case 8 -> {
+                case 8 -> ReportGenerator.generateReport(service.getAllInvoices(), "reports/invoice_report.md");
+                case 9 -> {
                     System.out.println("Exiting...");
                     return;
                 }
@@ -53,7 +64,7 @@ public class InvoiceApp {
         }
     }
 
-    private static void prompt() {
+    private static void cliPrompt() {
         System.out.println("\n1. Add Invoice");
         System.out.println("2. Import from CSV");
         System.out.println("3. List Invoices");
@@ -61,7 +72,8 @@ public class InvoiceApp {
         System.out.println("5. Filter by Amount");
         System.out.println("6. Report - Total per Supplier");
         System.out.println("7. Report - Top 3 Invoices");
-        System.out.println("8. Exit");
+        System.out.println("8. Report Generator");
+        System.out.println("9. Exit");
         System.out.print("Enter your choice :: ");
     }
 }

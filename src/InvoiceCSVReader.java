@@ -11,7 +11,11 @@ public class InvoiceCSVReader {
             String line;
             boolean headerSkipped = false;
             while ((line = br.readLine()) != null) {
-                if (!headerSkipped) { headerSkipped = true; continue; } // skip header
+                // skip csv header
+                if (!headerSkipped) {
+                    headerSkipped = true;
+                    continue;
+                }
                 String[] tokens = line.split(",");
                 if (tokens.length != 4) continue;
 
@@ -23,7 +27,7 @@ public class InvoiceCSVReader {
                 invoices.add(new InvoiceData(id, supplier, amount, date));
             }
         } catch (Exception e) {
-            System.out.println("Error reading CSV: " + e.getMessage());
+            System.out.println("Error reading CSV: " + e.getMessage() + ", skipping the row :/");
         }
         return invoices;
     }
