@@ -14,14 +14,10 @@ public class InvoiceApp {
             switch (choice) {
                 case 1 -> {
                     System.out.print("ID: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Supplier: ");
-                    String supplier = scanner.nextLine();
-                    System.out.print("Amount: ");
-                    double amount = scanner.nextDouble();
-                    scanner.nextLine();
-                    System.out.print("Date (yyyy-mm-dd): ");
-                    LocalDate date = LocalDate.parse(scanner.nextLine());
+                    String id = InvoiceInputHelper.promptString("Invoice ID");
+                    String supplier = InvoiceInputHelper.promptString("Supplier Name");
+                    double amount = InvoiceInputHelper.promptDouble("Amount");
+                    LocalDate date = InvoiceInputHelper.promptDate("Invoice Date");
                     if (service.addInvoice(new InvoiceData(id, supplier, amount, date))) {
                         System.out.println("Invoice added.");
                     } else {

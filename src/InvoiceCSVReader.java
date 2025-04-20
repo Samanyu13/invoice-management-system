@@ -24,10 +24,15 @@ public class InvoiceCSVReader {
                 double amount = Double.parseDouble(tokens[2].trim());
                 LocalDate date = LocalDate.parse(tokens[3].trim());
 
+                if (id.isEmpty() || supplier.isEmpty()) {
+                    System.out.println("Missing required fields, skipping invoice :/");
+                    continue;
+                }
+
                 invoices.add(new InvoiceData(id, supplier, amount, date));
             }
         } catch (Exception e) {
-            System.out.println("Error reading CSV: " + e.getMessage() + ", skipping the row :/");
+            System.out.println("Error reading CSV: " + e.getMessage() + ", skipping invoice :/");
         }
         return invoices;
     }
