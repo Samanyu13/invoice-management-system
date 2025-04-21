@@ -1,12 +1,14 @@
+package model;
+
 import java.time.LocalDate;
 
-public class InvoiceData {
+public class Invoice {
     private final String invoiceId;
     private final String supplierName;
     private final double amount;
     private final LocalDate invoiceDate;
 
-    public InvoiceData(String id, String supplierName, double amount, LocalDate invoiceDate) {
+    public Invoice(String id, String supplierName, double amount, LocalDate invoiceDate) {
         this.invoiceId = id;
         this.supplierName = supplierName;
         this.amount = amount;

@@ -1,8 +1,10 @@
+package util;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-public class InvoiceInputHelper {
+public class InputHelper {
 
     private static final Scanner scanner = new Scanner(System.in);
 

@@ -1,12 +1,16 @@
+package util;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Invoice;
+
 public class InvoiceCSVReader {
-    public static List<InvoiceData> readFromCsv(String filePath) {
-        List<InvoiceData> invoices = new ArrayList<>();
+    public static List<Invoice> readFromCsv(String filePath) {
+        List<Invoice> invoices = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean headerSkipped = false;
@@ -29,7 +33,7 @@ public class InvoiceCSVReader {
                     continue;
                 }
 
-                invoices.add(new InvoiceData(id, supplier, amount, date));
+                invoices.add(new Invoice(id, supplier, amount, date));
             }
         } catch (Exception e) {
             System.out.println("Error reading CSV: " + e.getMessage() + ", skipping invoice :/");

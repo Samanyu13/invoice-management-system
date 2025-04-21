@@ -2,9 +2,21 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.List;
 
+import model.Invoice;
+import repository.InvoiceRepository;
+import repository.InvoiceRepositoryImpl;
+import service.InvoiceService;
+import service.InvoiceServiceImpl;
+import util.InvoiceCSVReader;
+import util.InputHelper;
+import util.ReportGenerator;
+
 public class InvoiceApp {
     public static void main(String[] args) {
-        InvoiceServiceManager service = new InvoiceServiceManager();
+
+        InvoiceRepository repository = new InvoiceRepositoryImpl();
+        InvoiceService service = new InvoiceServiceImpl(repository);
+
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -14,30 +26,31 @@ public class InvoiceApp {
             switch (choice) {
                 case 1 -> {
                     System.out.print("ID: ");
-                    String id = InvoiceInputHelper.promptString("Invoice ID");
-                    String supplier = InvoiceInputHelper.promptString("Supplier Name");
-                    double amount = InvoiceInputHelper.promptDouble("Amount");
-                    LocalDate date = InvoiceInputHelper.promptDate("Invoice Date");
-                    if (service.addInvoice(new InvoiceData(id, supplier, amount, date))) {
-                        System.out.println("Invoice added.");
+                    String id = InputHelper.promptString("model.Invoice ID");
+                    String supplier = InputHelper.promptString("Supplier Name");
+                    double amount = InputHelper.promptDouble("Amount");
+                    LocalDate date = InputHelper.promptDate("model.Invoice Date");
+                    if (service.addInvoice(new Invoice(id, supplier, amount, date))) {
+                        System.out.println("model.Invoice added.");
                     } else {
-                        System.out.println("Invoice ID already exists. Skipped.");
+                        System.out.println("model.Invoice ID already exists. Skipped.");
                     }
                 }
                 case 2 -> {
                     int skipped = 0, added = 0;
                     System.out.print("CSV file path: ");
                     String path = scanner.nextLine();
-                    List<InvoiceData> imported = InvoiceCSVReader.readFromCsv(path);
-                    for (InvoiceData invoice : imported) {
+                    List<Invoice> imported = InvoiceCSVReader.readFromCsv(path);
+                    for (Invoice invoice : imported) {
                         if (service.addInvoice(invoice)) {
                             added++;
                         } else {
                             skipped++;
                         }
                     }
-                    System.out.println("Import complete. Added: " + added + ", Skipped (duplicates): " + skipped);                }
-                case 3 -> service.listInvoices().forEach(System.out::println);
+                    System.out.println("Import complete. Added: " + added + ", Skipped (duplicates): " + skipped);
+                }
+                case 3 -> service.getAllInvoices().forEach(System.out::println);
                 case 4 -> {
                     System.out.print("Supplier: ");
                     String sup = scanner.nextLine();
@@ -48,9 +61,11 @@ public class InvoiceApp {
                     double amt = scanner.nextDouble();
                     service.filterByAmount(amt).forEach(System.out::println);
                 }
-                case 6 -> service.totalAmountPerSupplier().forEach((k, v) -> System.out.println(k + ": " + v));
+                case 6 ->
+                        service.totalAmountPerSupplier().forEach((k, v) -> System.out.println(k + ": " + v));
                 case 7 -> service.top3Invoices().forEach(System.out::println);
-                case 8 -> ReportGenerator.generateReport(service.getAllInvoices(), "reports/invoice_report.md");
+                case 8 ->
+                        ReportGenerator.generateReport(service.getAllInvoices(), "reports/invoice_report.md");
                 case 9 -> {
                     System.out.println("Exiting...");
                     return;

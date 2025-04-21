@@ -1,7 +1,7 @@
-# Invoice Management System
+# model.Invoice Management System
 
-A simple command-line based Invoice Management System written in Java.  
-This idea is to set up a simple dashboard to manage and play with invoice data :)
+A simple command-line based model.Invoice Management System written in Java.  
+This idea is to set up a simple dashboard to manage and play with invoice repository :)
 
 ---
 
@@ -14,10 +14,6 @@ This idea is to set up a simple dashboard to manage and play with invoice data :
   - Amount threshold
 - Report Generator (export to Markdown):
   - Overall report
-  <!-- TODO
-  - Top 3 highest-value invoices
-  - Amount per Supplier 
-  -->
 - Import invoice data from a CSV file
 
 ---
@@ -39,7 +35,7 @@ This idea is to set up a simple dashboard to manage and play with invoice data :
    ```
 2. Compile the code
    ```bash
-   javac -d out src/*.java
+   javac -d out $(find src -name "*.java")
    ```
 3. Run the code
    ```bash
@@ -47,7 +43,7 @@ This idea is to set up a simple dashboard to manage and play with invoice data :
    ```
    
 ## CSV Import Format
-To import invoice data from a CSV file, use the following format:
+To import invoice repository from a CSV file, use the following format:
 ```bash
   invoiceId,supplierName,amount,invoiceDate
   INV001,Supplier A,5000.00,2024-01-15
