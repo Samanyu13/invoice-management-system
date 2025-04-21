@@ -1,3 +1,13 @@
+import static util.Constants.ADD_INVOICE;
+import static util.Constants.ADD_INVOICE_CSV;
+import static util.Constants.EXIT;
+import static util.Constants.FILTER_BY_AMOUNT;
+import static util.Constants.FILTER_BY_SUPPLIER;
+import static util.Constants.LIST_INVOICES;
+import static util.Constants.REPORT_GENERATOR;
+import static util.Constants.TOP_3_INVOICES;
+import static util.Constants.TOTAL_PER_SUPPLIER;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.List;
@@ -24,7 +34,7 @@ public class InvoiceApp {
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
-                case 1 -> {
+                case ADD_INVOICE -> {
                     System.out.print("ID: ");
                     String id = InputHelper.promptString("model.Invoice ID");
                     String supplier = InputHelper.promptString("Supplier Name");
@@ -36,7 +46,7 @@ public class InvoiceApp {
                         System.out.println("model.Invoice ID already exists. Skipped.");
                     }
                 }
-                case 2 -> {
+                case ADD_INVOICE_CSV -> {
                     int skipped = 0, added = 0;
                     System.out.print("CSV file path: ");
                     String path = scanner.nextLine();
@@ -50,23 +60,23 @@ public class InvoiceApp {
                     }
                     System.out.println("Import complete. Added: " + added + ", Skipped (duplicates): " + skipped);
                 }
-                case 3 -> service.getAllInvoices().forEach(System.out::println);
-                case 4 -> {
+                case LIST_INVOICES -> service.getAllInvoices().forEach(System.out::println);
+                case FILTER_BY_SUPPLIER -> {
                     System.out.print("Supplier: ");
                     String sup = scanner.nextLine();
                     service.filterBySupplier(sup).forEach(System.out::println);
                 }
-                case 5 -> {
+                case FILTER_BY_AMOUNT -> {
                     System.out.print("Amount Threshold: ");
                     double amt = scanner.nextDouble();
                     service.filterByAmount(amt).forEach(System.out::println);
                 }
-                case 6 ->
+                case TOTAL_PER_SUPPLIER ->
                         service.totalAmountPerSupplier().forEach((k, v) -> System.out.println(k + ": " + v));
-                case 7 -> service.top3Invoices().forEach(System.out::println);
-                case 8 ->
+                case TOP_3_INVOICES -> service.top3Invoices().forEach(System.out::println);
+                case REPORT_GENERATOR ->
                         ReportGenerator.generateReport(service.getAllInvoices(), "reports/invoice_report.md");
-                case 9 -> {
+                case EXIT -> {
                     System.out.println("Exiting...");
                     return;
                 }
