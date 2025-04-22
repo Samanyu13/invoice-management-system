@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import model.Invoice;
 import repository.InvoiceRepository;
+import service.InvoiceService;
 
 public class InvoiceServiceImpl implements InvoiceService {
 

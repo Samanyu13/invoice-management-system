@@ -1,13 +1,15 @@
 package cli;
 
+import static util.Constants.MAIN_REPORT_FILE_PATH;
+
 import java.time.LocalDate;
 import java.util.List;
 
 import model.Invoice;
 import service.InvoiceService;
+import service.ReportService;
 import util.InputHelper;
 import util.InvoiceCSVReader;
-import util.ReportGenerator;
 
 public class CLIHandlerFactory {
 
@@ -68,8 +70,11 @@ public class CLIHandlerFactory {
         return () -> service.top3Invoices().forEach(System.out::println);
     }
 
-    public static Runnable reportGeneratorHandler(InvoiceService service) {
-        return () -> ReportGenerator.generateReport(service.getAllInvoices(), "reports/invoice_report.md");
+    public static Runnable reportGeneratorHandler(InvoiceService service, ReportService reportService) {
+        return () -> {
+            String markdownInput = reportService.generateMarkdownReport(service.getAllInvoices());
+            reportService.writeReportToFile(markdownInput, MAIN_REPORT_FILE_PATH);
+        };
     }
 
     public static Runnable exitHandler() {

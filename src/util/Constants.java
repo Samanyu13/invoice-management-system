@@ -13,6 +13,8 @@ public class Constants {
     public static final int REPORT_GENERATOR = 8;
     public static final int EXIT = 9;
 
+    public static final String MAIN_REPORT_FILE_PATH = "reports/invoice_report.md";
+
     public static final Map<Integer, String> MENU_OPTIONS = Map.of(
             ADD_INVOICE, "Add Invoice",
             ADD_INVOICE_CSV, "Import from CSV",

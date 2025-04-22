@@ -1,4 +1,4 @@
-package util;
+package service.impl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,10 +9,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import model.Invoice;
+import service.ReportService;
 
-public class ReportGenerator {
-
-    public static void generateReport(List<Invoice> invoices, String filePath) {
+public class ReportServiceImpl implements ReportService {
+    @Override
+    public String generateMarkdownReport(List<Invoice> invoices) {
         StringBuilder report = new StringBuilder();
 
         report.append("# model.Invoice Report\n\n");
@@ -46,9 +47,13 @@ public class ReportGenerator {
 
         report.append("\n\n*Generated on ").append(LocalDateTime.now()).append("*\n\n");
 
+        return report.toString();
+    }
 
+    @Override
+    public void writeReportToFile(String content, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(report.toString());
+            writer.write(content);
             System.out.println("Report generated to : " + filePath);
         } catch (IOException e) {
             System.out.println("Failed to write report the report: " + e.getMessage());
