@@ -1,7 +1,5 @@
 package cli;
 
-import static util.Constants.MAIN_REPORT_FILE_PATH;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,6 +10,8 @@ import util.InputHelper;
 import util.InvoiceCSVReader;
 
 public class CLIHandlerFactory {
+
+    public static final String MAIN_REPORT_FILE_PATH = "reports/invoice_report.md";
 
     public static Runnable addInvoiceHandler(InvoiceService service) {
         return () -> {

@@ -36,4 +36,16 @@ public class InputHelper {
             }
         }
     }
+
+    public static Integer promptInt(String label) {
+        while (true) {
+            System.out.print(label + " (int): ");
+            String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please try again.");
+            }
+        }
+    }
 }

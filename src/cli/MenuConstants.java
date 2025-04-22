@@ -1,8 +1,8 @@
-package util;
+package cli;
 
 import java.util.Map;
 
-public class Constants {
+public class MenuConstants {
     public static final int ADD_INVOICE = 1;
     public static final int ADD_INVOICE_CSV = 2;
     public static final int LIST_INVOICES = 3;
@@ -12,8 +12,6 @@ public class Constants {
     public static final int TOP_3_INVOICES = 7;
     public static final int REPORT_GENERATOR = 8;
     public static final int EXIT = 9;
-
-    public static final String MAIN_REPORT_FILE_PATH = "reports/invoice_report.md";
 
     public static final Map<Integer, String> MENU_OPTIONS = Map.of(
             ADD_INVOICE, "Add Invoice",

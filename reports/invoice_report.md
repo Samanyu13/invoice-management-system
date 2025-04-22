@@ -2,13 +2,13 @@
 
 ## Summary
 - Total invoices: 11
-- Total amount: ₹29561.50
-- Average amount: ₹2687.41
+- Total amount: ₹32681.50
+- Average amount: ₹2971.05
 
 ## Total Amount Per Supplier
-- wefef3: ₹323.00
 - Supplier B: ₹7493.00
 - Supplier C: ₹12500.00
+- w2: ₹3443.00
 - Supplier A: ₹9245.50
 
 ## Top 3 Highest Invoices
@@ -17,5 +17,5 @@
 - **INV006** | Supplier B | ₹4000.00 | 2024-11-11
 
 
-*Generated on 2025-04-23T01:03:36.498549059*
+*Generated on 2025-04-23T02:16:14.376005954*
 

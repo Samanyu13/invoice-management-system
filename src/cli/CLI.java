@@ -2,7 +2,8 @@ package cli;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
+
+import util.InputHelper;
 
 public class CLI {
     private final Map<Integer, Command> commandMap = new LinkedHashMap<>();
@@ -12,14 +13,12 @@ public class CLI {
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             printMenu();
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-
+            int choice = InputHelper.promptInt("Enter your choice: ");
             Command command = commandMap.get(choice);
+
             if (command != null) {
                 command.execute();
             } else {
