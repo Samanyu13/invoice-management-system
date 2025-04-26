@@ -1,8 +1,8 @@
-package repository;
+package main.java.com.invoicemanager.repository;
 
 import java.util.ArrayList;
 
-import model.Invoice;
+import main.java.com.invoicemanager.model.Invoice;
 
 public interface InvoiceRepository {
     boolean save(Invoice invoice);

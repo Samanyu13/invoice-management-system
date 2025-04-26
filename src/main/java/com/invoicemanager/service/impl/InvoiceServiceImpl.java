@@ -1,13 +1,13 @@
-package service.impl;
+package main.java.com.invoicemanager.service.impl;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import model.Invoice;
-import repository.InvoiceRepository;
-import service.InvoiceService;
+import main.java.com.invoicemanager.model.Invoice;
+import main.java.com.invoicemanager.repository.InvoiceRepository;
+import main.java.com.invoicemanager.service.InvoiceService;
 
 public class InvoiceServiceImpl implements InvoiceService {
 

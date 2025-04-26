@@ -1,4 +1,4 @@
-package cli;
+package main.java.com.invoicemanager.cli;
 
 import java.util.Map;
 

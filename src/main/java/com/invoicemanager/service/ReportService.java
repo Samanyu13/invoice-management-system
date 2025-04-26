@@ -1,8 +1,8 @@
-package service;
+package main.java.com.invoicemanager.service;
 
 import java.util.List;
 
-import model.Invoice;
+import main.java.com.invoicemanager.model.Invoice;
 
 public interface ReportService {
     String generateMarkdownReport(List<Invoice> invoices);

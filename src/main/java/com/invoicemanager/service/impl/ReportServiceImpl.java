@@ -1,4 +1,4 @@
-package service.impl;
+package main.java.com.invoicemanager.service.impl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import model.Invoice;
-import service.ReportService;
+import main.java.com.invoicemanager.model.Invoice;
+import main.java.com.invoicemanager.service.ReportService;
 
 public class ReportServiceImpl implements ReportService {
     @Override
     public String generateMarkdownReport(List<Invoice> invoices) {
         StringBuilder report = new StringBuilder();
 
-        report.append("# model.Invoice Report\n\n");
+        report.append("# Invoice Report\n\n");
         report.append("## Summary\n");
         report.append("- Total invoices: ").append(invoices.size()).append("\n");
         double total = invoices.stream().mapToDouble(Invoice::getAmount).sum();

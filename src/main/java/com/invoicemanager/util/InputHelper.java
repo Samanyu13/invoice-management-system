@@ -1,4 +1,4 @@
-package util;
+package main.java.com.invoicemanager.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;

@@ -1,13 +1,13 @@
-package cli;
+package main.java.com.invoicemanager.cli;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import model.Invoice;
-import service.InvoiceService;
-import service.ReportService;
-import util.InputHelper;
-import util.InvoiceCSVReader;
+import main.java.com.invoicemanager.model.Invoice;
+import main.java.com.invoicemanager.service.InvoiceService;
+import main.java.com.invoicemanager.service.ReportService;
+import main.java.com.invoicemanager.util.InputHelper;
+import main.java.com.invoicemanager.util.InvoiceCSVReader;
 
 public class CLIHandlerFactory {
 

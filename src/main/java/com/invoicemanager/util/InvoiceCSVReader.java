@@ -1,4 +1,4 @@
-package util;
+package main.java.com.invoicemanager.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Invoice;
+import main.java.com.invoicemanager.model.Invoice;
 
 public class InvoiceCSVReader {
     public static List<Invoice> readFromCsv(String filePath) {

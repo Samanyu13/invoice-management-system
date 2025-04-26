@@ -1,8 +1,8 @@
-package service;
+package main.java.com.invoicemanager.service;
 
 import java.util.*;
 
-import model.Invoice;
+import main.java.com.invoicemanager.model.Invoice;
 
 public interface InvoiceService {
 

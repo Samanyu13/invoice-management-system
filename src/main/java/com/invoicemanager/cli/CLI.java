@@ -1,9 +1,9 @@
-package cli;
+package main.java.com.invoicemanager.cli;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import util.InputHelper;
+import main.java.com.invoicemanager.util.InputHelper;
 
 public class CLI {
     private final Map<Integer, Command> commandMap = new LinkedHashMap<>();

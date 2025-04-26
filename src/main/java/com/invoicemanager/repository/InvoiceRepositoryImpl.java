@@ -1,10 +1,10 @@
-package repository;
+package main.java.com.invoicemanager.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import model.Invoice;
+import main.java.com.invoicemanager.model.Invoice;
 
 public class InvoiceRepositoryImpl implements InvoiceRepository {
 

@@ -1,4 +1,4 @@
-package model;
+package main.java.com.invoicemanager.model;
 
 import java.time.LocalDate;
 

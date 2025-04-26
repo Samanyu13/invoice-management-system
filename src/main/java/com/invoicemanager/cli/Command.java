@@ -1,4 +1,4 @@
-package cli;
+package main.java.com.invoicemanager.cli;
 
 class Command {
     private final String cliPrompt;
