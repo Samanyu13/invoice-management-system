@@ -21,8 +21,6 @@ import static main.java.com.invoicemanager.cli.MenuConstants.TOP_3_INVOICES;
 import static main.java.com.invoicemanager.cli.MenuConstants.TOTAL_PER_SUPPLIER;
 
 import main.java.com.invoicemanager.cli.CLI;
-import main.java.com.invoicemanager.repository.InvoiceRepository;
-import main.java.com.invoicemanager.repository.InvoiceRepositoryImpl;
 import main.java.com.invoicemanager.service.InvoiceService;
 import main.java.com.invoicemanager.service.impl.InvoiceServiceImpl;
 import main.java.com.invoicemanager.service.ReportService;
@@ -31,8 +29,7 @@ import main.java.com.invoicemanager.service.impl.ReportServiceImpl;
 public class InvoiceApp {
     public static void main(String[] args) {
 
-        InvoiceRepository repository = new InvoiceRepositoryImpl();
-        InvoiceService service = new InvoiceServiceImpl(repository);
+        InvoiceService service = new InvoiceServiceImpl();
         ReportService reportService = new ReportServiceImpl();
 
         CLI cli = new CLI();
@@ -48,7 +45,7 @@ public class InvoiceApp {
         cli.addCLIOption(FILTER_BY_AMOUNT, MENU_OPTIONS.get(FILTER_BY_AMOUNT), filterByAmountHandler(service));
         cli.addCLIOption(TOTAL_PER_SUPPLIER, MENU_OPTIONS.get(TOTAL_PER_SUPPLIER), totalPerSupplierHandler(service));
         cli.addCLIOption(TOP_3_INVOICES, MENU_OPTIONS.get(TOP_3_INVOICES), topThreeInvoicesHandler(service));
-        cli.addCLIOption(REPORT_GENERATOR, MENU_OPTIONS.get(REPORT_GENERATOR), reportGeneratorHandler(service, reportService));
+        cli.addCLIOption(REPORT_GENERATOR, MENU_OPTIONS.get(REPORT_GENERATOR), reportGeneratorHandler(reportService));
         cli.addCLIOption(EXIT, MENU_OPTIONS.get(EXIT), exitHandler());
     }
 }

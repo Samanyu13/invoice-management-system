@@ -45,13 +45,13 @@ public class CLIHandlerFactory {
     }
 
     public static Runnable listInvoicesHandler(InvoiceService service) {
-        return () -> service.getAllInvoices().forEach(System.out::println);
+        return () -> service.peekInvoiceData().forEach(System.out::println);
     }
 
     public static Runnable filterBySupplierHandler(InvoiceService service) {
         return () -> {
             String supplier = InputHelper.promptString("Supplier: ");
-            service.filterBySupplier(supplier).forEach(System.out::println);
+            service.findInvoicesBySupplier(supplier).forEach(System.out::println);
         };
     }
 
@@ -67,12 +67,12 @@ public class CLIHandlerFactory {
     }
 
     public static Runnable topThreeInvoicesHandler(InvoiceService service) {
-        return () -> service.top3Invoices().forEach(System.out::println);
+        return () -> service.topThreeInvoices().forEach(System.out::println);
     }
 
-    public static Runnable reportGeneratorHandler(InvoiceService service, ReportService reportService) {
+    public static Runnable reportGeneratorHandler(ReportService reportService) {
         return () -> {
-            String markdownInput = reportService.generateMarkdownReport(service.getAllInvoices());
+            String markdownInput = reportService.generateMarkdownReport();
             reportService.writeReportToFile(markdownInput, MAIN_REPORT_FILE_PATH);
         };
     }

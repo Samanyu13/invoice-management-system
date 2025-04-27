@@ -1,14 +1,14 @@
-# model.Invoice Management System
+# Invoice Management System
 
-A simple command-line based model.Invoice Management System written in Java.  
-This idea is to set up a simple dashboard to manage and play with invoice data :)
+A simple command-line based Invoice Management System written in Java.  
+This idea is to set up a simple CLI to manage and work on invoice data.
 
 ---
 
 ## Features
 
 - Add new invoices
-- List all invoices
+- Peek at invoices
 - Simple Invoice filtering by:
   - Supplier name
   - Amount threshold
@@ -21,7 +21,7 @@ This idea is to set up a simple dashboard to manage and play with invoice data :
 ## Requirements
 
 - Java 17+ (should work fine with any modern Java version)
-- No external libraries used (as of now)
+- Maven 3.8+ (for building and running easily)
 - No database — fully in-memory
 
 ---
@@ -33,13 +33,17 @@ This idea is to set up a simple dashboard to manage and play with invoice data :
    git clone https://github.com/Samanyu13/invoice-management-system.git
    cd invoice-management-system
    ```
-2. Compile the code
+2. Build the Project using Maven
    ```bash
-   javac -d out $(find src -name "*.java")
+   mvn clean compile
    ```
-3. Run the code
+3. Run the Application
    ```bash
-   java -cp out InvoiceApp
+   mvn exec:java
+   ```
+4. Run tests
+   ```bash
+   mvn test
    ```
    
 ## CSV Import Format

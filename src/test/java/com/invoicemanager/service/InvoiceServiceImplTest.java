@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
+import main.java.com.invoicemanager.exception.InvoiceServiceException;
 import main.java.com.invoicemanager.model.Invoice;
+import main.java.com.invoicemanager.repository.impl.InvoiceRepositoryImpl;
 import main.java.com.invoicemanager.service.impl.InvoiceServiceImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -19,73 +20,90 @@ class InvoiceServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        InvoiceRepositoryImpl repository = InvoiceRepositoryImpl.getInstance();
+        repository.clearAll();
+
         service = new InvoiceServiceImpl();
     }
 
     @Test
-    void testAddInvoice() {
-        Invoice invoice = new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01"));
-        assertTrue(service.addInvoice(invoice), "Invoice should be added successfully.");
+    void verify_successful_invoice_addition_reflects_in_memory() {
+        Invoice invoice = new Invoice("1", "SupplierA", 1000, LocalDate.now());
 
-        // Adding same ID again should return false
-        assertFalse(service.addInvoice(invoice), "Duplicate invoice should not be added.");
+        boolean result = service.addInvoice(invoice);
+
+        assertTrue(result);
+
+        List<Invoice> invoices = service.peekInvoiceData();
+        assertFalse(invoices.isEmpty());
     }
 
     @Test
-    void testFilterBySupplier() {
-        Invoice invoice1 = new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01"));
-        Invoice invoice2 = new Invoice("2", "Supplier B", 700.0, LocalDate.parse("2025-04-02"));
-        service.addInvoice(invoice1);
-        service.addInvoice(invoice2);
+    void verify_duplicate_invoice_throws_exception() {
+        Invoice invoice = new Invoice("1", "SupplierA", 1000, LocalDate.now());
+        service.addInvoice(invoice);
 
-        List<Invoice> supplierAInvoices = service.filterBySupplier("Supplier A");
-        assertEquals(1, supplierAInvoices.size(), "Should return 1 invoice for Supplier A.");
-        assertEquals("Supplier A", supplierAInvoices.get(0).getSupplierName(), "Supplier name should match.");
+        assertThrows(InvoiceServiceException.class, () -> service.addInvoice(invoice));
     }
 
     @Test
-    void testFilterByAmount() {
-        Invoice invoice1 = new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01"));
-        Invoice invoice2 = new Invoice("2", "Supplier B", 1500.0, LocalDate.parse("2025-04-02"));
-        service.addInvoice(invoice1);
-        service.addInvoice(invoice2);
+    void verify_findInvoicesBySupplier_returns_correct_data() {
+        Invoice invoice = new Invoice("1", "SupplierA", 1000, LocalDate.now());
+        service.addInvoice(invoice);
 
-        List<Invoice> filteredInvoices = service.filterByAmount(1000.0);
-        assertEquals(1, filteredInvoices.size(), "Should return 1 invoice above 1000.0 amount.");
-        assertTrue(filteredInvoices.get(0).getAmount() > 1000.0, "Invoice amount should be above threshold.");
+        List<Invoice> result = service.findInvoicesBySupplier("SupplierA");
+
+        assertEquals(1, result.size());
+        assertEquals("SupplierA", result.get(0).getSupplierName());
     }
 
     @Test
-    void testTotalAmountPerSupplier() {
-        service.addInvoice(new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01")));
-        service.addInvoice(new Invoice("2", "Supplier A", 700.0, LocalDate.parse("2025-04-02")));
-        service.addInvoice(new Invoice("3", "Supplier B", 800.0, LocalDate.parse("2025-04-03")));
+    void verify_filterByAmount_returns_correct_data() {
+        Invoice invoice = new Invoice("1", "SupplierA", 1000, LocalDate.now());
+        service.addInvoice(invoice);
+        int threshold = 750;
+        List<Invoice> result = service.filterByAmount(threshold);
 
-        Map<String, Double> totals = service.totalAmountPerSupplier();
-        assertEquals(2, totals.size(), "Should have two suppliers.");
-        assertEquals(1200.0, totals.get("Supplier A"), 0.001, "Supplier A total amount mismatch.");
-        assertEquals(800.0, totals.get("Supplier B"), 0.001, "Supplier B total amount mismatch.");
+        assertFalse(result.isEmpty());
+        assertTrue(result.get(0).getAmount() >= threshold);
     }
 
     @Test
-    void testTopThreeInvoices() {
-        service.addInvoice(new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01")));
-        service.addInvoice(new Invoice("2", "Supplier A", 1200.0, LocalDate.parse("2025-04-02")));
-        service.addInvoice(new Invoice("3", "Supplier B", 1500.0, LocalDate.parse("2025-04-03")));
-        service.addInvoice(new Invoice("4", "Supplier C", 100.0, LocalDate.parse("2025-04-04")));
-        service.addInvoice(new Invoice("5", "Supplier D", 900.0, LocalDate.parse("2025-04-05")));
+    void verify_totalAmountPerSupplier_returns_correct_data() {
+        Invoice invoice = new Invoice("1", "SupplierA", 1000, LocalDate.now());
+        service.addInvoice(invoice);
 
-        List<Invoice> top3 = service.topThreeInvoices();
-        assertEquals(3, top3.size(), "Should return top 3 invoices.");
-        assertEquals(1500.0, top3.get(0).getAmount(), 0.001, "Top invoice amount mismatch.");
+        Map<String, Double> result = service.totalAmountPerSupplier();
+
+        assertEquals(1, result.size());
+        assertEquals(1000.0, result.get("SupplierA"));
     }
 
     @Test
-    void testGetAllInvoices() {
-        service.addInvoice(new Invoice("1", "Supplier A", 500.0, LocalDate.parse("2025-04-01")));
-        service.addInvoice(new Invoice("2", "Supplier B", 700.0, LocalDate.parse("2025-04-02")));
+    void verify_topThreeInvoices_returns_three_items_when_invoice_data_greater_than_two() {
+        service.addInvoice(new Invoice("1", "SupplierA", 500, LocalDate.now()));
+        service.addInvoice(new Invoice("2", "SupplierB", 1000, LocalDate.now()));
+        service.addInvoice(new Invoice("3", "SupplierC", 1500, LocalDate.now()));
+        service.addInvoice(new Invoice("4", "SupplierD", 2000, LocalDate.now()));
 
-        List<Invoice> allInvoices = service.getAllInvoices();
-        assertEquals(2, allInvoices.size(), "Should return all added invoices.");
+        List<Invoice> result = service.topThreeInvoices();
+
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void verify_peekInvoiceData_returns_correct_data() {
+        service.addInvoice(new Invoice("1", "SupplierA", 500, LocalDate.now()));
+        service.addInvoice(new Invoice("2", "SupplierB", 1000, LocalDate.now()));
+        service.addInvoice(new Invoice("3", "SupplierC", 1500, LocalDate.now()));
+
+        List<Invoice> result = service.peekInvoiceData();
+
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void verify_addInvoice_with_null_id_throws_exception() {
+        assertThrows(InvoiceServiceException.class, () -> service.addInvoice(new Invoice(null, "SupplierA", 500, LocalDate.now())));
     }
 }

@@ -1,62 +1,80 @@
 package main.java.com.invoicemanager.service.impl;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import main.java.com.invoicemanager.exception.InvoiceServiceException;
 import main.java.com.invoicemanager.model.Invoice;
 import main.java.com.invoicemanager.repository.InvoiceRepository;
+import main.java.com.invoicemanager.repository.impl.InvoiceRepositoryImpl;
 import main.java.com.invoicemanager.service.InvoiceService;
 
 public class InvoiceServiceImpl implements InvoiceService {
 
+    private static final Logger logger = Logger.getLogger(InvoiceServiceImpl.class.getName());
     private final InvoiceRepository repository;
 
-    public InvoiceServiceImpl(InvoiceRepository repository) {
-        this.repository = repository;
+    public InvoiceServiceImpl() {
+        this.repository = InvoiceRepositoryImpl.getInstance();
     }
 
     @Override
     public boolean addInvoice(Invoice invoice) {
-        // duplicate invoice check
-        if (repository.existsById(invoice.getInvoiceId())) {
-            return false;
+        try {
+            if (repository.existsById(invoice.getInvoiceId())) {
+                throw new InvoiceServiceException("Invoice ID already exists: " + invoice.getInvoiceId(), new Throwable("Duplicate ID"));
+            }
+            return repository.save(invoice);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error while adding invoice: " + invoice.getInvoiceId(), e);
+            throw new InvoiceServiceException("Failed to add invoice: " + invoice.getInvoiceId(), e);
         }
-        return repository.save(invoice);
     }
 
     @Override
-    public List<Invoice> filterBySupplier(String supplier) {
-        return repository.getAll().stream()
-                .filter(i -> i.getSupplierName().equalsIgnoreCase(supplier))
-                .collect(Collectors.toList());
+    public List<Invoice> findInvoicesBySupplier(String supplier) {
+        try {
+            return repository.findBySupplier(supplier);
+        } catch (Exception e) {
+            throw new InvoiceServiceException("Failed to filter by supplier: " + supplier, e);
+        }
     }
 
     @Override
     public List<Invoice> filterByAmount(double threshold) {
-        return repository.getAll().stream()
-                .filter(i -> i.getAmount() >= threshold)
-                .collect(Collectors.toList());
+        try {
+            return repository.findByAmountGreaterThan(threshold);
+        } catch (Exception e) {
+            throw new InvoiceServiceException("Failed to filter by amount: " + threshold, e);
+        }
     }
 
     @Override
     public Map<String, Double> totalAmountPerSupplier() {
-        return repository.getAll().stream()
-                .collect(Collectors.groupingBy(Invoice::getSupplierName,
-                        Collectors.summingDouble((Invoice::getAmount))));
+        try {
+            return repository.groupBySupplierTotalAmount();
+        } catch (Exception e) {
+            throw new InvoiceServiceException("Failed to calculate total amount per supplier", e);
+        }
     }
 
     @Override
-    public List<Invoice> top3Invoices() {
-        return repository.getAll().stream()
-                .sorted(Comparator.comparingDouble(Invoice::getAmount).reversed())
-                .limit(3)
-                .collect(Collectors.toList());
+    public List<Invoice> topThreeInvoices() {
+        try {
+            return repository.findTopInvoices(3);
+        } catch (Exception e) {
+            throw new InvoiceServiceException("Failed to get top 3 invoices", e);
+        }
     }
 
     @Override
-    public List<Invoice> getAllInvoices() {
-        return repository.getAll();
+    public List<Invoice> peekInvoiceData() {
+        try {
+            return repository.findTopInvoices(5);
+        } catch (Exception e) {
+            throw new InvoiceServiceException("Failed to peek invoices", e);
+        }
     }
 }
